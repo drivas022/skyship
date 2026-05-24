@@ -44,6 +44,28 @@ const adminService = {
     const response = await api.delete(`/admin/usuarios/${id}`);
     return response.data;
   },
+  // ============================================
+  // CONTACTOS
+  // ============================================
+  getContactos: async () => {
+    const response = await api.get('/admin/contactos');
+    return response.data;
+  },
+
+  responderContacto: async (id, respuesta) => {
+    const response = await api.post(`/admin/contactos/${id}/responder`, { respuesta });
+    return response.data;
+  },
+
+  marcarContactoLeido: async (id) => {
+    const response = await api.put(`/admin/contactos/${id}/marcar-leido`);
+    return response.data;
+  },
+
+  deleteContacto: async (id) => {
+    const response = await api.delete(`/admin/contactos/${id}`);
+    return response.data;
+  }
 };
 
 export default adminService;

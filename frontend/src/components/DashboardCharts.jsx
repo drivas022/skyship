@@ -1,80 +1,100 @@
 import React from 'react';
 import {
-  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
-  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
 } from 'recharts';
+import '../styles/dashboard-charts.css';
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const DashboardCharts = ({ enviosPorMes, enviosPorRegion, distribucionEstados }) => {
+  // Colores para el pie chart
+  const COLORS = ['#6b6b6b', '#111111', '#999999', '#dddddd'];
 
-const DashboardCharts = ({ stats }) => {
+  // Validar que los datos existan
+  if (!enviosPorMes || !enviosPorRegion || !distribucionEstados) {
+    return (
+      <div className="charts-container">
+        <p>No hay datos suficientes para mostrar gráficas</p>
+      </div>
+    );
+  }
+
+  // Formatear datos para el pie chart (usar 'value' en lugar de 'total')
+  const pieData = distribucionEstados.map(item => ({
+    name: item.estado,
+    value: item.value || 0
+  }));
+
   return (
-    <div className="dashboard-charts">
-      {/* Gráfica de Línea: Envíos por Mes */}
-      <div className="chart-container">
-        <h3>Envíos por Mes</h3>
+    <div className="charts-container">
+      {/* Gráfica 1: Envíos por mes */}
+      <div className="chart-card">
+        <h3 className="chart-title">ENVÍOS POR MES</h3>
         <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={stats.enviosPorMes}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mes" />
-            <YAxis />
+          <LineChart data={enviosPorMes}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#dddddd" />
+            <XAxis dataKey="mes" stroke="#6b6b6b" />
+            <YAxis stroke="#6b6b6b" />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="total" stroke="#8884d8" name="Envíos" />
+            <Line
+              type="monotone"
+              dataKey="total"
+              stroke="#111111"
+              strokeWidth={2}
+              name="Envíos"
+            />
           </LineChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Gráfica de Barras: Envíos por Región */}
-      <div className="chart-container">
-        <h3>Top 10 Departamentos</h3>
+      {/* Gráfica 2: Envíos por región */}
+      <div className="chart-card">
+        <h3 className="chart-title">ENVÍOS POR DEPARTAMENTO</h3>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={stats.enviosPorRegion}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="region" />
-            <YAxis />
+          <BarChart data={enviosPorRegion}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#dddddd" />
+            <XAxis dataKey="region" stroke="#6b6b6b" />
+            <YAxis stroke="#6b6b6b" />
             <Tooltip />
             <Legend />
-            <Bar dataKey="total" fill="#82ca9d" name="Envíos" />
+            <Bar dataKey="total" fill="#111111" name="Envíos" />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Gráfica de Dona: Distribución por Estado */}
-      <div className="chart-container">
-        <h3>Distribución por Estado</h3>
+      {/* Gráfica 3: Distribución por estado */}
+      <div className="chart-card">
+        <h3 className="chart-title">DISTRIBUCIÓN POR ESTADO</h3>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
-              data={stats.distribucionEstados}
+              data={pieData}
               cx="50%"
               cy="50%"
               labelLine={false}
-              label={({ estado, percent }) => `${estado}: ${(percent * 100).toFixed(0)}%`}
-              outerRadius={80}
+              label={({ name, value }) => `${name}: ${value}`}
+              outerRadius={100}
               fill="#8884d8"
               dataKey="value"
             >
-              {stats.distribucionEstados.map((entry, index) => (
+              {pieData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
             <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
-
-      {/* Gráfica de Línea: Ingresos por Mes */}
-      <div className="chart-container">
-        <h3>Ingresos por Mes</h3>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={stats.enviosPorMes}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="mes" />
-            <YAxis />
-            <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="ingresos" stroke="#82ca9d" name="Ingresos (Q)" />
-          </LineChart>
+          </PieChart>
         </ResponsiveContainer>
       </div>
     </div>

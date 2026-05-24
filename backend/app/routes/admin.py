@@ -374,3 +374,128 @@ def delete_usuario(id):
     except Exception as e:
         db.session.rollback()
         return jsonify({'message': f'Error al eliminar usuario: {str(e)}'}), 500
+    
+    # ============================================
+# GESTIÓN DE CONTACTOS (ADMIN)
+# ============================================
+@admin_bp.route('/contactos', methods=['GET'])
+@admin_required
+def get_all_contactos():
+    """Obtener todos los mensajes de contacto"""
+    try:
+        from app.models.contacto import Contacto
+        
+        contactos = Contacto.query.order_by(Contacto.created_at.desc()).all()
+        
+        return jsonify([{
+            'id': c.id,
+            'nombre': c.nombre,
+            'correo': c.correo,
+            'telefono': c.telefono,
+            'mensaje': c.mensaje,
+            'estado': c.estado,
+            'respondido_por': c.respondido_por,
+            'respondido_en': c.respondido_en.isoformat() if c.respondido_en else None,
+            'created_at': c.created_at.isoformat()
+        } for c in contactos]), 200
+        
+    except Exception as e:
+        return jsonify({'message': f'Error al obtener contactos: {str(e)}'}), 500
+
+@admin_bp.route('/contactos/<int:id>/responder', methods=['POST'])
+@admin_required
+def responder_contacto(id):
+    """Responder a un mensaje de contacto y enviar email"""
+    try:
+        from app.models.contacto import Contacto
+        from app.utils.email_service import enviar_respuesta_contacto
+        from datetime import datetime
+        
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+        
+        contacto = Contacto.query.get(id)
+        if not contacto:
+            return jsonify({'message': 'Contacto no encontrado'}), 404
+        
+        data = request.get_json()
+        respuesta = data.get('respuesta')
+        
+        if not respuesta:
+            return jsonify({'message': 'La respuesta es requerida'}), 400
+        
+        # Enviar correo
+        email_enviado = enviar_respuesta_contacto(
+            destinatario=contacto.correo,
+            nombre=contacto.nombre,
+            mensaje_original=contacto.mensaje,
+            respuesta_admin=respuesta,
+            admin_nombre=current_user.nombre
+        )
+        
+        # Actualizar estado del contacto
+        contacto.estado = 'respondido'
+        contacto.respondido_por = current_user_id
+        contacto.respondido_en = datetime.now()
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Respuesta enviada exitosamente',
+            'email_enviado': email_enviado,
+            'contacto': {
+                'id': contacto.id,
+                'estado': contacto.estado,
+                'respondido_en': contacto.respondido_en.isoformat()
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': f'Error al responder contacto: {str(e)}'}), 500
+
+@admin_bp.route('/contactos/<int:id>/marcar-leido', methods=['PUT'])
+@admin_required
+def marcar_contacto_leido(id):
+    """Marcar un contacto como leído"""
+    try:
+        from app.models.contacto import Contacto
+        
+        contacto = Contacto.query.get(id)
+        if not contacto:
+            return jsonify({'message': 'Contacto no encontrado'}), 404
+        
+        contacto.estado = 'leido'
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Contacto marcado como leído',
+            'contacto': {
+                'id': contacto.id,
+                'estado': contacto.estado
+            }
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': f'Error al marcar contacto: {str(e)}'}), 500
+
+@admin_bp.route('/contactos/<int:id>', methods=['DELETE'])
+@admin_required
+def delete_contacto(id):
+    """Eliminar un mensaje de contacto"""
+    try:
+        from app.models.contacto import Contacto
+        
+        contacto = Contacto.query.get(id)
+        if not contacto:
+            return jsonify({'message': 'Contacto no encontrado'}), 404
+        
+        db.session.delete(contacto)
+        db.session.commit()
+        
+        return jsonify({'message': 'Contacto eliminado exitosamente'}), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'message': f'Error al eliminar contacto: {str(e)}'}), 500
