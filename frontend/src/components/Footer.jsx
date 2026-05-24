@@ -7,7 +7,7 @@ function Footer() {
       <div className="footer__contenedor">
         {/* Marca */}
         <div className="footer__marca">
-          <h2 className="footer__logo">AEROPAQ</h2>
+          <h2 className="footer__logo">SKYSHIP</h2>
           <p className="footer__texto">
             Premium courier services delivering luxury logistics with precision
             and excellence.
@@ -33,7 +33,7 @@ function Footer() {
 
       {/* Parte inferior */}
       <div className="footer__bottom">
-        <p>© 2026 AEROPAQ. All rights reserved. By Diego Manuel Rivas Arguijo</p>
+        <p>© 2026 SKYSHIP. All rights reserved. By Diego Manuel Rivas Arguijo</p>
       </div>
     </footer>
   );
