@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // URL base del backend Flask - cambiar según ambiente
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 
 // Instancia de axios configurada
 const api = axios.create({
