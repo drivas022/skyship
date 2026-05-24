@@ -1,0 +1,108 @@
+.hero {
+  position: relative;
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-fondo);
+  overflow: hidden;
+}
+
+.hero__contenedor {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 88vh;
+}
+
+/* Imagen del avión detrás del texto */
+.hero__fondo-avion {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 85%;
+  max-width: 1100px;
+  transform: translate(-50%, -50%);
+  opacity: 0.08;
+  filter: grayscale(100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Contenido encima */
+.hero__contenido {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  text-align: left;
+}
+
+.hero__etiqueta {
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  color: var(--color-gris);
+  margin-bottom: 24px;
+  border: 1px solid var(--color-borde);
+  padding: 10px 18px;
+}
+
+.hero__titulo {
+  font-size: clamp(3rem, 7vw, 6rem);
+  line-height: 0.98;
+  font-weight: 400;
+  margin-bottom: 28px;
+  letter-spacing: -0.04em;
+}
+
+.hero__descripcion {
+  max-width: 720px;
+  color: var(--color-gris);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: 36px;
+}
+
+.hero__boton {
+  display: inline-block;
+  background-color: var(--color-negro);
+  color: var(--color-blanco);
+  padding: 16px 26px;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--color-negro);
+  transition: all 0.3s ease;
+}
+
+.hero__boton:hover {
+  background-color: transparent;
+  color: var(--color-negro);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    min-height: auto;
+    padding: 80px 0;
+  }
+
+  .hero__contenedor {
+    min-height: auto;
+  }
+
+  .hero__fondo-avion {
+    width: 125%;
+    opacity: 0.07;
+  }
+
+  .hero__contenido {
+    max-width: 100%;
+  }
+
+  .hero__titulo {
+    font-size: 3.2rem;
+  }
+
+  .hero__descripcion {
+    font-size: 0.95rem;
+  }
+}

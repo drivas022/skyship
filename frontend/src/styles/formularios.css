@@ -1,0 +1,72 @@
+.formulario-contacto,
+.formulario-cotizador {
+  border: 1px solid var(--color-borde);
+  background-color: transparent;
+  padding: 26px;
+}
+
+.formulario__grupo {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 18px;
+}
+
+.formulario__grupo label {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--color-gris);
+  margin-bottom: 8px;
+}
+
+.formulario__subtitulo {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--color-gris);
+  margin-bottom: 10px;
+}
+
+.formulario__grupo input,
+.formulario__grupo textarea,
+.formulario__grupo select {
+  width: 100%;
+  border: 1px solid var(--color-borde);
+  background-color: var(--color-fondo);
+  padding: 14px 14px;
+  outline: none;
+}
+
+.formulario__check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  color: var(--color-negro);
+  font-size: 0.92rem;
+}
+
+.formulario__check input {
+  width: auto;
+}
+
+.formulario__boton {
+  width: 100%;
+  background-color: var(--color-negro);
+  color: var(--color-blanco);
+  border: 1px solid var(--color-negro);
+  padding: 14px 18px;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  font-size: 0.76rem;
+}
+
+.formulario__error {
+  margin-top: 8px;
+  color: #a33b3b;
+  font-size: 0.82rem;
+}
+
+.formulario__exito {
+  margin-top: 16px;
+  color: #2e6b45;
+  font-size: 0.88rem;
+}

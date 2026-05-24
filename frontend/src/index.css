@@ -1,0 +1,29 @@
+/* Reset básico para evitar estilos raros por defecto */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Estilos generales del body */
+body {
+  background-color: #f8f8f6;
+  color: #111111;
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Quitamos decoración por defecto a enlaces */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Hacemos que los botones y formularios hereden la fuente */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}

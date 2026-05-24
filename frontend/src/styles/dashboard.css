@@ -1,0 +1,198 @@
+
+.dashboard {
+  min-height: 100vh;
+  background-color: var(--color-fondo);
+  padding-top: 40px;
+  padding-bottom: 80px;
+}
+
+.dashboard__header {
+  max-width: var(--ancho-maximo);
+  margin: 0 auto;
+  padding: 0 24px 32px;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.dashboard__titulo {
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--color-negro);
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.dashboard__subtitulo {
+  font-size: 0.88rem;
+  color: var(--color-gris);
+}
+
+.dashboard__contenido {
+  max-width: var(--ancho-maximo);
+  margin: 40px auto 0;
+  padding: 0 24px;
+}
+
+/* Grid de envíos */
+.envios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.envios-grid--vacio {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--color-gris);
+}
+
+.envios-grid--vacio p {
+  font-size: 0.92rem;
+  margin-bottom: 24px;
+}
+
+/* Card de envío */
+.envio-card {
+  background: var(--color-blanco);
+  border: 1px solid var(--color-borde);
+  padding: 24px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.envio-card:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+.envio-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.envio-card__codigo {
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--color-negro);
+}
+
+.envio-card__estado {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border: 1px solid;
+}
+
+.envio-card__estado--pendiente {
+  color: #856404;
+  background-color: #fff3cd;
+  border-color: #ffeeba;
+}
+
+.envio-card__estado--transito {
+  color: #004085;
+  background-color: #cce5ff;
+  border-color: #b8daff;
+}
+
+.envio-card__estado--entregado {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.envio-card__estado--cancelado {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.envio-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.envio-card__info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.envio-card__label {
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-gris);
+}
+
+.envio-card__value {
+  font-size: 0.88rem;
+  color: var(--color-negro);
+}
+
+/* Botón crear envío */
+.dashboard__boton-crear {
+  background-color: var(--color-negro);
+  color: var(--color-blanco);
+  padding: 14px 24px;
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--color-negro);
+  cursor: pointer;
+  display: inline-block;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  text-decoration: none;
+}
+
+.dashboard__boton-crear:hover {
+  background-color: transparent;
+  color: var(--color-negro);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Formulario crear envío */
+.crear-envio {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.crear-envio__form {
+  background: var(--color-blanco);
+  border: 1px solid var(--color-borde);
+  padding: 32px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard__header {
+    padding-bottom: 24px;
+  }
+
+  .dashboard__titulo {
+    font-size: 1.3rem;
+  }
+
+  .envios-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .envio-card {
+    padding: 20px;
+  }
+
+  .crear-envio__form {
+    padding: 24px;
+  }
+}

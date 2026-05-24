@@ -1,0 +1,53 @@
+/* Variables globales para mantener colores consistentes */
+:root {
+  --color-fondo: #f8f8f6;
+  --color-blanco: #ffffff;
+  --color-negro: #111111;
+  --color-gris: #6b6b6b;
+  --color-borde: #dddddd;
+  --ancho-maximo: 1200px;
+}
+
+/* Clase contenedor reutilizable */
+.contenedor {
+  width: 100%;
+  max-width: var(--ancho-maximo);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Clase base para secciones */
+.seccion {
+  padding: 80px 0;
+}
+
+/* Animación suave de entrada */
+.animacion-suave {
+  opacity: 0;
+  transform: translateY(24px);
+  animation: aparecerSuave 0.9s ease forwards;
+}
+
+/* Pequeño delay para que no todo entre al mismo tiempo */
+.animacion-delay-1 {
+  animation-delay: 0.1s;
+}
+
+.animacion-delay-2 {
+  animation-delay: 0.2s;
+}
+
+.animacion-delay-3 {
+  animation-delay: 0.3s;
+}
+
+.animacion-delay-4 {
+  animation-delay: 0.4s;
+}
+
+@keyframes aparecerSuave {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
