@@ -7,6 +7,7 @@ from app import bcrypt
 from app.utils.decorators import admin_required
 from flask_jwt_extended import get_jwt_identity
 from sqlalchemy import func, extract
+from datetime import datetime, timedelta
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -16,12 +17,12 @@ admin_bp = Blueprint('admin', __name__)
 @admin_bp.route('/dashboard', methods=['GET'])
 @admin_required
 def get_dashboard_stats():
-    """Obtener estadísticas para el dashboard admin"""
+    """Obtener estadísticas mejoradas para el dashboard admin"""
     try:
-        # Total de envíos
+        # ========================================
+        # KPIS BÁSICOS
+        # ========================================
         total_envios = Envio.query.count()
-        
-        # Total de usuarios
         total_usuarios = User.query.filter_by(rol='cliente').count()
         
         # Envíos por estado
@@ -30,36 +31,177 @@ def get_dashboard_stats():
         envios_entregados = Envio.query.filter_by(estado='entregado').count()
         envios_cancelados = Envio.query.filter_by(estado='cancelado').count()
         
-        # Envíos por mes (últimos 6 meses)
+        # ========================================
+        # KPIS FINANCIEROS
+        # ========================================
+        # Ingresos totales
+        ingresos_totales = db.session.query(
+            func.sum(Envio.costo)
+        ).scalar() or 0
+        
+        # Ingreso promedio por envío
+        ingreso_promedio = db.session.query(
+            func.avg(Envio.costo)
+        ).scalar() or 0
+        
+        # Tasa de entrega (%)
+        tasa_entrega = (envios_entregados / total_envios * 100) if total_envios > 0 else 0
+        
+        # ========================================
+        # ENVÍOS POR MES (últimos 12 meses)
+        # ========================================
         envios_por_mes = db.session.query(
             extract('month', Envio.fecha_creacion).label('mes'),
             extract('year', Envio.fecha_creacion).label('año'),
-            func.count(Envio.id).label('total')
-        ).group_by('mes', 'año').order_by('año', 'mes').limit(6).all()
+            func.count(Envio.id).label('total'),
+            func.sum(Envio.costo).label('ingresos')
+        ).group_by('mes', 'año').order_by('año', 'mes').limit(12).all()
         
-        # Envíos por departamento
+        # Formatear envíos por mes
+        meses_nombres = {
+            1: 'Ene', 2: 'Feb', 3: 'Mar', 4: 'Abr', 5: 'May', 6: 'Jun',
+            7: 'Jul', 8: 'Ago', 9: 'Sep', 10: 'Oct', 11: 'Nov', 12: 'Dic'
+        }
+        
+        envios_mes_formateado = [
+            {
+                'mes': meses_nombres[int(e.mes)],
+                'año': int(e.año),
+                'total': e.total,
+                'ingresos': float(e.ingresos) if e.ingresos else 0
+            } 
+            for e in envios_por_mes
+        ]
+        
+        # ========================================
+        # ENVÍOS POR DEPARTAMENTO (Top 10)
+        # ========================================
         envios_por_region = db.session.query(
             Envio.departamento_destino,
-            func.count(Envio.id).label('total')
-        ).filter(Envio.departamento_destino.isnot(None)).group_by(
+            func.count(Envio.id).label('total'),
+            func.sum(Envio.costo).label('ingresos')
+        ).filter(
+            Envio.departamento_destino.isnot(None)
+        ).group_by(
             Envio.departamento_destino
-        ).order_by(func.count(Envio.id).desc()).limit(10).all()
+        ).order_by(
+            func.count(Envio.id).desc()
+        ).limit(10).all()
         
+        envios_region_formateado = [
+            {
+                'region': e.departamento_destino or 'Sin especificar',
+                'total': e.total,
+                'ingresos': float(e.ingresos) if e.ingresos else 0
+            }
+            for e in envios_por_region
+        ]
+        
+        # ========================================
+        # DISTRIBUCIÓN POR ESTADO (para gráfica dona)
+        # ========================================
+        distribucion_estados = [
+            {'estado': 'Pendiente', 'value': envios_pendientes},
+            {'estado': 'En Tránsito', 'value': envios_en_transito},
+            {'estado': 'Entregado', 'value': envios_entregados},
+            {'estado': 'Cancelado', 'value': envios_cancelados}
+        ]
+        
+        # ========================================
+        # TOP 5 CLIENTES
+        # ========================================
+        top_clientes = db.session.query(
+            User.nombre,
+            User.correo,
+            func.count(Envio.id).label('total_envios'),
+            func.sum(Envio.costo).label('total_gastado')
+        ).join(
+            Envio, User.id == Envio.user_id
+        ).group_by(
+            User.id, User.nombre, User.correo
+        ).order_by(
+            func.count(Envio.id).desc()
+        ).limit(5).all()
+        
+        top_clientes_formateado = [
+            {
+                'nombre': c.nombre,
+                'correo': c.correo,
+                'total_envios': c.total_envios,
+                'total_gastado': float(c.total_gastado) if c.total_gastado else 0
+            }
+            for c in top_clientes
+        ]
+        
+        # ========================================
+        # COMPARACIÓN MES ACTUAL VS ANTERIOR
+        # ========================================
+        hoy = datetime.now()
+        inicio_mes_actual = hoy.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        inicio_mes_anterior = (inicio_mes_actual - timedelta(days=1)).replace(day=1)
+        
+        envios_mes_actual = Envio.query.filter(
+            Envio.fecha_creacion >= inicio_mes_actual
+        ).count()
+        
+        envios_mes_anterior = Envio.query.filter(
+            Envio.fecha_creacion >= inicio_mes_anterior,
+            Envio.fecha_creacion < inicio_mes_actual
+        ).count()
+        
+        # Calcular cambio porcentual
+        cambio_envios = 0
+        if envios_mes_anterior > 0:
+            cambio_envios = ((envios_mes_actual - envios_mes_anterior) / envios_mes_anterior) * 100
+        
+        # Ingresos mes actual vs anterior
+        ingresos_mes_actual = db.session.query(
+            func.sum(Envio.costo)
+        ).filter(
+            Envio.fecha_creacion >= inicio_mes_actual
+        ).scalar() or 0
+        
+        ingresos_mes_anterior = db.session.query(
+            func.sum(Envio.costo)
+        ).filter(
+            Envio.fecha_creacion >= inicio_mes_anterior,
+            Envio.fecha_creacion < inicio_mes_actual
+        ).scalar() or 0
+        
+        cambio_ingresos = 0
+        if ingresos_mes_anterior > 0:
+            cambio_ingresos = ((ingresos_mes_actual - ingresos_mes_anterior) / ingresos_mes_anterior) * 100
+        
+        # ========================================
+        # RESPUESTA COMPLETA
+        # ========================================
         return jsonify({
+            # KPIs Básicos
             'totalEnvios': total_envios,
             'totalUsuarios': total_usuarios,
             'enviosPendientes': envios_pendientes,
             'enviosEnTransito': envios_en_transito,
             'enviosEntregados': envios_entregados,
             'enviosCancelados': envios_cancelados,
-            'enviosPorMes': [
-                {'mes': int(e.mes), 'año': int(e.año), 'total': e.total} 
-                for e in envios_por_mes
-            ],
-            'enviosPorRegion': [
-                {'region': e.departamento_destino or 'Sin especificar', 'total': e.total} 
-                for e in envios_por_region
-            ]
+            
+            # KPIs Financieros
+            'ingresosTotales': float(ingresos_totales),
+            'ingresoPromedio': float(ingreso_promedio),
+            'tasaEntrega': round(tasa_entrega, 1),
+            
+            # Comparación Mensual
+            'enviosMesActual': envios_mes_actual,
+            'enviosMesAnterior': envios_mes_anterior,
+            'cambioEnvios': round(cambio_envios, 1),
+            'ingresosMesActual': float(ingresos_mes_actual),
+            'ingresosMesAnterior': float(ingresos_mes_anterior),
+            'cambioIngresos': round(cambio_ingresos, 1),
+            
+            # Gráficas
+            'enviosPorMes': envios_mes_formateado,
+            'enviosPorRegion': envios_region_formateado,
+            'distribucionEstados': distribucion_estados,
+            'topClientes': top_clientes_formateado
         }), 200
         
     except Exception as e:
@@ -84,7 +226,7 @@ def get_all_envios():
 def update_envio(id):
     """Actualizar envío (admin)"""
     try:
-        current_user_id = int(get_jwt_identity())
+        current_user_id = get_jwt_identity()
         envio = Envio.query.get(id)
         
         if not envio:
@@ -213,7 +355,7 @@ def update_usuario(id):
 def delete_usuario(id):
     """Eliminar usuario (admin)"""
     try:
-        current_user_id = int(get_jwt_identity())
+        current_user_id = get_jwt_identity()
         
         # No permitir que un admin se elimine a sí mismo
         if current_user_id == id:

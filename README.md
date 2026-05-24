@@ -238,6 +238,10 @@ npm install
 npm install axios
 ```
 
+```bash
+npm install recharts
+```
+
 Ejecutar la aplicación:
 
 ```bash

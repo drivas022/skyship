@@ -1,0 +1,33 @@
+.dashboard-content {
+  margin-top: 1.5rem;
+}
+
+.dashboard-charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.chart-container {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-borde);
+}
+
+.chart-container h3 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-negro);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 1.5rem 0;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .dashboard-charts {
+    grid-template-columns: 1fr;
+  }
+}

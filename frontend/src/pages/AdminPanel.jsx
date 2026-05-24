@@ -5,13 +5,17 @@ import adminService from '../services/adminService';
 import enviosService from '../services/enviosService';
 import TablaEnvios from '../components/TablaEnvios';
 import TablaUsuarios from '../components/TablaUsuarios';
+import KPICard from '../components/KPICard';
+import DashboardCharts from '../components/DashboardCharts';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import '../styles/admin.css';
+import '../styles/kpi-card.css';
+import '../styles/dashboard-charts.css';
 
 /**
  * Panel de administrador
- * Tabs: Dashboard (estadísticas), Envíos (CRUD), Usuarios (CRUD)
+ * Tabs: Dashboard (estadísticas + gráficas), Envíos (CRUD), Usuarios (CRUD)
  */
 const AdminPanel = () => {
   const navigate = useNavigate();
@@ -143,6 +147,14 @@ const AdminPanel = () => {
     });
   };
 
+  // Función para formatear moneda
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('es-GT', {
+      style: 'currency',
+      currency: 'GTQ'
+    }).format(value || 0);
+  };
+
   return (
     <>
       <Navbar />
@@ -155,7 +167,7 @@ const AdminPanel = () => {
         </div>
 
         <div className="admin__contenido">
-          {/* Tabs */}
+          {/* Tabs - SIN EMOJIS */}
           <div className="admin__tabs">
             <button
               className={`admin__tab ${
@@ -163,7 +175,7 @@ const AdminPanel = () => {
               }`}
               onClick={() => setTabActual('dashboard')}
             >
-              Dashboard
+              DASHBOARD
             </button>
             <button
               className={`admin__tab ${
@@ -171,7 +183,7 @@ const AdminPanel = () => {
               }`}
               onClick={() => setTabActual('envios')}
             >
-              Envíos
+              ENVÍOS
             </button>
             <button
               className={`admin__tab ${
@@ -179,7 +191,7 @@ const AdminPanel = () => {
               }`}
               onClick={() => setTabActual('usuarios')}
             >
-              Usuarios
+              USUARIOS
             </button>
           </div>
 
@@ -190,31 +202,113 @@ const AdminPanel = () => {
             <p style={{ color: '#a33b3b' }}>{error}</p>
           ) : (
             <>
-              {/* Dashboard - Estadísticas */}
+              {/* Dashboard - Estadísticas + Gráficas */}
               {tabActual === 'dashboard' && stats && (
-                <div className="stats-grid">
-                  <div className="stat-card">
-                    <p className="stat-card__label">Total Envíos</p>
-                    <p className="stat-card__value">{stats.totalEnvios || 0}</p>
+                <div className="dashboard-content">
+                  {/* KPIs Principales */}
+                  <div className="kpi-grid">
+                    <KPICard
+                      title="Total Envíos"
+                      value={stats.totalEnvios || 0}
+                      subtitle="Envíos registrados"
+                      trend={stats.cambioEnvios}
+                    />
+                    <KPICard
+                      title="Total Usuarios"
+                      value={stats.totalUsuarios || 0}
+                      subtitle="Clientes registrados"
+                    />
+                    <KPICard
+                      title="Ingresos Totales"
+                      value={formatCurrency(stats.ingresosTotales)}
+                      subtitle={`Promedio: ${formatCurrency(stats.ingresoPromedio)}`}
+                      trend={stats.cambioIngresos}
+                    />
+                    <KPICard
+                      title="Tasa de Entrega"
+                      value={`${stats.tasaEntrega || 0}%`}
+                      subtitle={`${stats.enviosEntregados || 0} de ${stats.totalEnvios || 0}`}
+                    />
                   </div>
-                  <div className="stat-card">
-                    <p className="stat-card__label">Total Usuarios</p>
-                    <p className="stat-card__value">
-                      {stats.totalUsuarios || 0}
-                    </p>
+
+                  {/* KPIs Secundarios - Estados */}
+                  <div className="kpi-grid secondary">
+                    <KPICard
+                      title="Pendientes"
+                      value={stats.enviosPendientes || 0}
+                    />
+                    <KPICard
+                      title="En Tránsito"
+                      value={stats.enviosEnTransito || 0}
+                    />
+                    <KPICard
+                      title="Entregados"
+                      value={stats.enviosEntregados || 0}
+                    />
+                    <KPICard
+                      title="Cancelados"
+                      value={stats.enviosCancelados || 0}
+                    />
                   </div>
-                  <div className="stat-card">
-                    <p className="stat-card__label">Envíos Pendientes</p>
-                    <p className="stat-card__value">
-                      {stats.enviosPendientes || 0}
-                    </p>
-                  </div>
-                  <div className="stat-card">
-                    <p className="stat-card__label">Envíos Entregados</p>
-                    <p className="stat-card__value">
-                      {stats.enviosEntregados || 0}
-                    </p>
-                  </div>
+
+                  {/* Comparación Mensual */}
+                  {stats.enviosMesActual !== undefined && (
+                    <div className="monthly-comparison">
+                      <div className="comparison-card">
+                        <h3>Envíos Este Mes</h3>
+                        <div className="comparison-value">{stats.enviosMesActual}</div>
+                        <div className="comparison-subtitle">
+                          vs {stats.enviosMesAnterior} mes anterior
+                        </div>
+                        <div className={`comparison-trend ${stats.cambioEnvios >= 0 ? 'positive' : 'negative'}`}>
+                          {stats.cambioEnvios >= 0 ? '↑' : '↓'} {Math.abs(stats.cambioEnvios || 0).toFixed(1)}%
+                        </div>
+                      </div>
+                      
+                      <div className="comparison-card">
+                        <h3>Ingresos Este Mes</h3>
+                        <div className="comparison-value">{formatCurrency(stats.ingresosMesActual)}</div>
+                        <div className="comparison-subtitle">
+                          vs {formatCurrency(stats.ingresosMesAnterior)} mes anterior
+                        </div>
+                        <div className={`comparison-trend ${stats.cambioIngresos >= 0 ? 'positive' : 'negative'}`}>
+                          {stats.cambioIngresos >= 0 ? '↑' : '↓'} {Math.abs(stats.cambioIngresos || 0).toFixed(1)}%
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Gráficas */}
+                  {stats.enviosPorMes && stats.enviosPorRegion && stats.distribucionEstados && (
+                    <DashboardCharts stats={stats} />
+                  )}
+
+                  {/* Top 5 Clientes */}
+                  {stats.topClientes && stats.topClientes.length > 0 && (
+                    <div className="top-clientes">
+                      <h3>Top 5 Clientes</h3>
+                      <table className="top-clientes-table">
+                        <thead>
+                          <tr>
+                            <th>Cliente</th>
+                            <th>Correo</th>
+                            <th>Envíos</th>
+                            <th>Total Gastado</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {stats.topClientes.map((cliente, index) => (
+                            <tr key={index}>
+                              <td>{cliente.nombre}</td>
+                              <td>{cliente.correo}</td>
+                              <td>{cliente.total_envios}</td>
+                              <td>{formatCurrency(cliente.total_gastado)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               )}
 

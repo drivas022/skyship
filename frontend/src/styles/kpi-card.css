@@ -1,0 +1,179 @@
+/* KPI Grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.kpi-grid.secondary {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+/* KPI Card - Diseño limpio y minimalista */
+.kpi-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-borde);
+  transition: box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.kpi-card__label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-gris);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 0.75rem 0;
+}
+
+.kpi-card__value {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-negro);
+  margin: 0 0 0.5rem 0;
+  line-height: 1.2;
+}
+
+.kpi-card__subtitle {
+  font-size: 0.85rem;
+  color: var(--color-gris);
+  margin: 0 0 0.5rem 0;
+}
+
+.kpi-card__trend {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.kpi-card__trend--positive {
+  color: #059669;
+}
+
+.kpi-card__trend--negative {
+  color: #dc2626;
+}
+
+/* Comparación Mensual - Diseño limpio SIN gradientes */
+.monthly-comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.comparison-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-borde);
+}
+
+.comparison-card h3 {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-gris);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 1rem 0;
+}
+
+.comparison-value {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-negro);
+  margin-bottom: 0.5rem;
+}
+
+.comparison-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-gris);
+  margin-bottom: 1rem;
+}
+
+.comparison-trend {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.comparison-trend.positive {
+  color: #059669;
+}
+
+.comparison-trend.negative {
+  color: #dc2626;
+}
+
+/* Top Clientes */
+.top-clientes {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 4px;
+  border: 1px solid var(--color-borde);
+  margin-top: 2rem;
+}
+
+.top-clientes h3 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--color-negro);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 1.5rem 0;
+}
+
+.top-clientes-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.top-clientes-table th {
+  text-align: left;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-gris);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.top-clientes-table td {
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  color: var(--color-negro);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.top-clientes-table tr:last-child td {
+  border-bottom: none;
+}
+
+.top-clientes-table tr:hover {
+  background: var(--color-fondo);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .monthly-comparison {
+    grid-template-columns: 1fr;
+  }
+  
+  .kpi-card__value {
+    font-size: 1.8rem;
+  }
+  
+  .comparison-value {
+    font-size: 1.8rem;
+  }
+}
