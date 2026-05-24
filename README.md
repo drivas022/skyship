@@ -234,6 +234,10 @@ Instalar dependencias:
 npm install
 ```
 
+```bash
+npm install axios
+```
+
 Ejecutar la aplicación:
 
 ```bash
