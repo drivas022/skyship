@@ -5,6 +5,8 @@ from app import bcrypt
 from app.utils.validators import validar_email, validar_telefono, validar_password
 from flask_jwt_extended import create_access_token
 
+# Rutas de autenticación - POST /api/auth/register y /api/auth/login
+
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/register', methods=['POST'])

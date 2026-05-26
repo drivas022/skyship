@@ -3,6 +3,8 @@ from flask import jsonify
 from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
 from app.models.user import User
 
+# Decoradores @token_required y @admin_required para proteger rutas
+
 def token_required(f):
     """Decorador para rutas que requieren autenticación"""
     @wraps(f)

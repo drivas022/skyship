@@ -1,6 +1,6 @@
 from app import create_app
 from app.database import db
-
+# punto de entrada
 app = create_app()
 
 if __name__ == '__main__':

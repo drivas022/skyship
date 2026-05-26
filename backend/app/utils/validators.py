@@ -1,5 +1,7 @@
 import re
 
+# Validadores de email, teléfono y contraseña
+
 def validar_email(email):
     """Validar formato de email"""
     patron = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'

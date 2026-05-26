@@ -1054,13 +1054,13 @@ Deberías tener **3 servicios** corriendo:
    - ✅ Deberías ver el formulario de login
 
 3. **Iniciar sesión como cliente:**
-   - Email: `juan@gmail.com`
-   - Contraseña: `cliente123`
+   - Email: `drivas022@gmail.com`
+   - Contraseña: `pruebas1234`
    - ✅ Deberías ver el dashboard con envíos
 
 4. **Cerrar sesión e iniciar como admin:**
-   - Email: `admin@skyship.com`
-   - Contraseña: `admin123`
+   - Email: `dmrivasa@correo.url.edu.gt`
+   - Contraseña: `pruebas1234`
    - ✅ Deberías ver el panel de administración con estadísticas
 
 Si todo funciona, ¡felicidades! 🎊 La aplicación está completamente configurada.

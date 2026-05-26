@@ -2,6 +2,8 @@ import os
 from datetime import timedelta
 from dotenv import load_dotenv
 
+# Configuración de la aplicación - Carga variables de entorno desde .env
+
 load_dotenv()
 
 class Config:

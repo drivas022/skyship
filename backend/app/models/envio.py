@@ -3,6 +3,8 @@ from datetime import datetime
 import random
 import string
 
+# Modelo Envio - Tabla envios (paquetería con código de guía único)
+
 class Envio(db.Model):
     __tablename__ = 'envios'
     

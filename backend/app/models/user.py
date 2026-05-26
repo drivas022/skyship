@@ -1,6 +1,7 @@
 from app.database import db
 from datetime import datetime
 
+# Modelo User - Tabla users (clientes y administradores)
 class User(db.Model):
     __tablename__ = 'users'
     

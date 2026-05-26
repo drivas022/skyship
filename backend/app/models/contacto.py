@@ -1,6 +1,7 @@
 from app.database import db
 from datetime import datetime
 
+# Modelo Contacto - Mensajes del formulario de contacto
 class Contacto(db.Model):
     __tablename__ = 'contactos'
     

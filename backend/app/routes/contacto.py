@@ -3,6 +3,8 @@ from app.database import db
 from app.models.contacto import Contacto
 from app.utils.validators import validar_email, validar_telefono
 
+# Ruta pública - POST /api/contacto (formulario de contacto)
+
 contacto_bp = Blueprint('contacto', __name__)
 
 @contacto_bp.route('', methods=['POST'])

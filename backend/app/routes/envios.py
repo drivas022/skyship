@@ -5,6 +5,8 @@ from app.models.tracking import TrackingEnvio
 from app.utils.decorators import token_required
 from flask_jwt_extended import get_jwt_identity
 
+# Rutas de envíos para clientes - GET/POST /api/envios (requiere JWT)
+
 envios_bp = Blueprint('envios', __name__)
 
 @envios_bp.route('', methods=['GET'])

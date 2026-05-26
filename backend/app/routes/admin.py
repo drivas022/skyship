@@ -9,6 +9,8 @@ from flask_jwt_extended import get_jwt_identity
 from sqlalchemy import func, extract
 from datetime import datetime, timedelta
 
+# Rutas de administración - Dashboard, CRUD usuarios/envíos/contactos (requiere rol admin)
+
 admin_bp = Blueprint('admin', __name__)
 
 # ============================================

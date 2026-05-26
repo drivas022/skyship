@@ -4,6 +4,8 @@ from email.mime.multipart import MIMEMultipart
 from datetime import datetime
 import os
 
+# Servicio SMTP para enviar emails de respuesta a contactos (Gmail)
+
 def enviar_respuesta_contacto(destinatario, nombre, mensaje_original, respuesta_admin, admin_nombre):
     """
     Envía un correo de respuesta a un contacto usando Gmail
@@ -18,7 +20,7 @@ def enviar_respuesta_contacto(destinatario, nombre, mensaje_original, respuesta_
         
         # Validar que existan las credenciales
         if not smtp_user or not smtp_password:
-            print("❌ ERROR: Faltan credenciales SMTP en .env")
+            print(" ERROR: Faltan credenciales SMTP en .env")
             print("   Configura SMTP_USER y SMTP_PASSWORD")
             return False
         
@@ -103,7 +105,7 @@ def enviar_respuesta_contacto(destinatario, nombre, mensaje_original, respuesta_
         
     except smtplib.SMTPAuthenticationError:
         print("=" * 50)
-        print("❌ ERROR DE AUTENTICACIÓN")
+        print(" ERROR DE AUTENTICACIÓN")
         print("   - Verifica que SMTP_USER sea tu correo de Gmail")
         print("   - Verifica que SMTP_PASSWORD sea la contraseña de aplicación")
         print("=" * 50)
@@ -111,12 +113,12 @@ def enviar_respuesta_contacto(destinatario, nombre, mensaje_original, respuesta_
         
     except smtplib.SMTPException as e:
         print("=" * 50)
-        print(f"❌ ERROR SMTP: {str(e)}")
+        print(f" ERROR SMTP: {str(e)}")
         print("=" * 50)
         return False
         
     except Exception as e:
         print("=" * 50)
-        print(f"❌ ERROR GENERAL: {str(e)}")
+        print(f" ERROR GENERAL: {str(e)}")
         print("=" * 50)
         return False
